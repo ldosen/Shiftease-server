@@ -38,8 +38,8 @@ slots_to_be_filled_sunday = Shift.query.filter_by(day='sunday').filter_by(filled
 # As such we have 12 data points, 4 per person ie 2 per person per day (I recognize there are really no Sunday tours)
 raw_availabilities = [0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0]
 
-slots_to_fill = {"Saturday": ["10:15am - 11:30am", "11:45am - 1pm"],
-                 "Sunday": ["10:15am - 11:30am", "11:45am - 1pm"]}
+slots_to_fill = {"Saturday: 10:15am - 11:30am", "Saturday: 11:45am - 1pm",
+                 "Sunday: 10:15am - 11:30am", "Sunday: 11:45am - 1pm"}
 
 # Greatest amount of timeslots to be filled in any given day in the selected time period.
 # TO-DO: Count this while querying database.
