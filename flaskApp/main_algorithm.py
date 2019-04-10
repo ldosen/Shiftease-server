@@ -1,5 +1,5 @@
 import queue
-from flaskApp.models import Employee, Shift, Available_For
+# from flaskApp.models import Employee, Shift, Available_For
 
 # TODO: Convert this into a function so it can be called form another script file
 # TODO: Make the algorithm return something, preferably a dictionary but we cna jsonify anything
@@ -38,8 +38,8 @@ slots_to_be_filled_sunday = Shift.query.filter_by(day='sunday').filter_by(filled
 # As such we have 12 data points, 4 per person ie 2 per person per day (I recognize there are really no Sunday tours)
 raw_availabilities = [0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0]
 
-slots_to_fill = {"Saturday: 10:15am - 11:30am", "Saturday: 11:45am - 1pm",
-                 "Sunday: 10:15am - 11:30am", "Sunday: 11:45am - 1pm"}
+slots_to_fill = ["Saturday: 10:15am - 11:30am", "Saturday: 11:45am - 1pm",
+                 "Sunday: 10:15am - 11:30am", "Sunday: 11:45am - 1pm"]
 
 # Greatest amount of timeslots to be filled in any given day in the selected time period.
 # TO-DO: Count this while querying database.
@@ -81,11 +81,6 @@ for emp in ordered_employees:
 
 # Step 2: Step through the schedule and try to schedule someone, checking the constraints to see if its possible.
 schedule = [None for x in range(total_shifts)]
-"""
-schedule = [["" for x in range(max_slots)]
-            for y in range(len(slots_to_fill))]
-"""
-
 print("scheduling algorithm:")
 
 while not employees_queue.empty():
@@ -109,6 +104,11 @@ while not employees_queue.empty():
         else:
             shift_index += 1
 
+schedule_dict = {}
+for i in range(len(schedule)):
+    schedule_dict[slots_to_fill[i]] = schedule[i]
+    i += 1
+
 
 # Step 3: Remove the guide from the queue if they can be scheduled
 # Step 4: Keep track of how many times people have been scheduled to enforce fairness
@@ -117,8 +117,8 @@ while not employees_queue.empty():
 
 
 def main():
-    print("schedule:")
-    print(schedule)
+    print("schedule_dict:")
+    print(schedule_dict)
     """
     print("employees_dict value:")
     print(employees_dict)
