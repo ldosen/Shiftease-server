@@ -59,27 +59,38 @@ employees = ["Luke", "George", "Zac"]
 target_shifts = [2, 1, 1]
 
 
+def make_schedule(raw_availabilities, slots_to_fill, max_slots, total_shifts, employees, target_shifts):
+    employees_dict = create_employees_dict(
+        employees, target_shifts, raw_availabilities)
+    employees_queue = create_employees_queue(employees_dict)
+    return schedule(total_shifts, employees_queue, employees_dict, slots_to_fill)
+
 # Step 1.2: Sort the employees into a priority queue based primarily on target number of shifts
 # and secondarily (if two employees have same target number of shifts) on number of available slots per person.
 
-employees_dict = {}
-avbl_index = 0
-emp_index = 0
 
-for employee in employees:
-    employees_dict[employee] = [target_shifts[emp_index], sum(raw_availabilities[avbl_index: avbl_index + total_shifts]),
-                                raw_availabilities[avbl_index: avbl_index + total_shifts]]
-    avbl_index += total_shifts
-    emp_index += 1
+def create_employees_dict(employees, target_shifts, raw_availabilities):
+    employees_dict = {}
+    avbl_index = 0
+    emp_index = 0
+    for employee in employees:
+        employees_dict[employee] = [target_shifts[emp_index], sum(raw_availabilities[avbl_index: avbl_index + total_shifts]),
+                                    raw_availabilities[avbl_index: avbl_index + total_shifts]]
+        avbl_index += total_shifts
+        emp_index += 1
+    return employees_dict
 
-ordered_employees = sorted(
-    employees_dict, key=lambda k: (employees_dict[k][0], employees_dict[k][1]))
-employees_queue = queue.Queue(maxsize=len(employees))
 
-for emp in ordered_employees:
-    employees_queue.put(emp)
+def create_employees_queue(employees_dict):
+    ordered_employees = sorted(
+        employees_dict, key=lambda k: (employees_dict[k][0], employees_dict[k][1]))
+    employees_queue = queue.Queue(maxsize=len(employees))
+    for emp in ordered_employees:
+        employees_queue.put(emp)
+    return employees_queue
 
 # Step 2: Step through the schedule and try to schedule someone, checking the constraints to see if its possible.
+
 
 print("scheduling algorithm:")
 
@@ -123,7 +134,7 @@ def schedule(total_shifts, employees_queue, employees_dict, slots_to_fill):
 
 def main():
     print("schedule_dict:")
-    print(schedule(total_shifts, employees_queue, employees_dict, slots_to_fill))
+    print(make_schedule(raw_availabilities, slots_to_fill, max_slots, total_shifts, employees, target_shifts))
 
 
 if __name__ == '__main__':
