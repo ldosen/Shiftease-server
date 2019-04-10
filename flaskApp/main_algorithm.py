@@ -80,34 +80,39 @@ for emp in ordered_employees:
     employees_queue.put(emp)
 
 # Step 2: Step through the schedule and try to schedule someone, checking the constraints to see if its possible.
-schedule = [None for x in range(total_shifts)]
+
 print("scheduling algorithm:")
 
-while not employees_queue.empty():
-    current_employee = employees_queue.get()
-    print("current_employee:")
-    print(current_employee)
-    shift_index = 0
-    for x in range(len(schedule)):
-        print("shift_index:")
-        print(shift_index)
-        if schedule[shift_index] == None and employees_dict[current_employee][2][shift_index] == 1:
-            schedule[shift_index] = current_employee
-            print("employee scheduled for shift")
-            employees_dict[current_employee][0] -= 1
-            print("employee remaining shifts after scheduling:")
-            print(employees_dict[current_employee][0])
-            if employees_dict[current_employee][0] > 0:
-                employees_queue.put(current_employee)
-                print("employee re-added to queue")
-            break
-        else:
-            shift_index += 1
 
-schedule_dict = {}
-for i in range(len(schedule)):
-    schedule_dict[slots_to_fill[i]] = schedule[i]
-    i += 1
+def schedule(total_shifts, employees_queue, employees_dict, slots_to_fill):
+    schedule_list = [None for x in range(total_shifts)]
+
+    while not employees_queue.empty():
+        current_employee = employees_queue.get()
+        print("current_employee:")
+        print(current_employee)
+        for shift_index in range(total_shifts):
+            print("shift_index:")
+            print(shift_index)
+            if schedule_list[shift_index] == None and employees_dict[current_employee][2][shift_index] == 1:
+                schedule_list[shift_index] = current_employee
+                print("employee scheduled for shift")
+                employees_dict[current_employee][0] -= 1
+                print("employee remaining shifts after scheduling:")
+                print(employees_dict[current_employee][0])
+                if employees_dict[current_employee][0] > 0:
+                    employees_queue.put(current_employee)
+                    print("employee re-added to queue")
+                break
+            else:
+                shift_index += 1
+
+    schedule_dict = {}
+    for i in range(len(schedule_list)):
+        schedule_dict[slots_to_fill[i]] = schedule_list[i]
+        i += 1
+
+    return schedule_dict
 
 
 # Step 3: Remove the guide from the queue if they can be scheduled
@@ -118,18 +123,7 @@ for i in range(len(schedule)):
 
 def main():
     print("schedule_dict:")
-    print(schedule_dict)
-    """
-    print("employees_dict value:")
-    print(employees_dict)
-    print()
-    print("ordered_employees values:")
-    print(ordered_employees)
-    print()
-    print("employees_queue values:")
-    while not employees_queue.empty():
-        print(employees_queue.get())
-    """
+    print(schedule(total_shifts, employees_queue, employees_dict, slots_to_fill))
 
 
 if __name__ == '__main__':
