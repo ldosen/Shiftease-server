@@ -1,5 +1,5 @@
 import queue
-# from flaskApp.models import Employee, Shift, Available_For
+from flaskApp.models import Employee, Shift, Available_For
 
 # TODO: Convert this into a function so it can be called form another script file
 # TODO: Make the algorithm return something, preferably a dictionary but we cna jsonify anything
@@ -57,6 +57,17 @@ employees = ["Luke", "George", "Zac"]
 # ideal number can be met. We ain't there yet, so for beginning dev purposes this one happens to fit perfectly.
 
 target_shifts = [2, 1, 1]
+
+
+def call_algorithm():
+    raw_availabilities = [0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0]
+    slots_to_fill = ["Saturday: 10:15am - 11:30am", "Saturday: 11:45am - 1pm",
+                     "Sunday: 10:15am - 11:30am", "Sunday: 11:45am - 1pm"]
+    max_slots = 2
+    total_shifts = 4
+    employees = ["Luke", "George", "Zac"]
+    target_shifts = [2, 1, 1]
+    return make_schedule(raw_availabilities, slots_to_fill, max_slots, total_shifts, employees, target_shifts)
 
 
 def make_schedule(raw_availabilities, slots_to_fill, max_slots, total_shifts, employees, target_shifts):
@@ -134,7 +145,8 @@ def schedule(total_shifts, employees_queue, employees_dict, slots_to_fill):
 
 def main():
     print("schedule_dict:")
-    print(make_schedule(raw_availabilities, slots_to_fill, max_slots, total_shifts, employees, target_shifts))
+    print(make_schedule(raw_availabilities, slots_to_fill,
+                        max_slots, total_shifts, employees, target_shifts))
 
 
 if __name__ == '__main__':
