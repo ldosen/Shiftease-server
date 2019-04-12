@@ -82,6 +82,8 @@ def make_schedule(raw_availabilities, slots_to_fill, max_slots, total_shifts, em
 
 # Create employees dict, effectively mapping each employee to all their relevant information in the format
 # Employee: [target shifts, total shifts they are available for, list of all their availabilities]
+
+
 def create_employees_dict(employees, target_shifts, raw_availabilities):
     employees_dict = {}
     avbl_index = 0
@@ -95,6 +97,8 @@ def create_employees_dict(employees, target_shifts, raw_availabilities):
 
 # Sort the employees into a priority queue based primarily on target number of shifts
 # and secondarily (if two employees have same target number of shifts) on number of available slots per person.
+
+
 def create_employees_queue(employees_dict):
     ordered_employees = sorted(
         employees_dict, key=lambda k: (employees_dict[k][0], employees_dict[k][1]))
@@ -104,6 +108,8 @@ def create_employees_queue(employees_dict):
     return employees_queue
 
 # Scheduling algorithm
+
+
 def schedule(total_shifts, employees_queue, employees_dict, slots_to_fill):
     # List of employees (empty, filled below) in the order of shifts in given time period
     schedule_list = [None for x in range(total_shifts)]
