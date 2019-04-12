@@ -1,13 +1,10 @@
 import queue
-from flaskApp.models import Employee, Shift, Available_For
-
-# TODO: Convert this into a function so it can be called form another script file
-# TODO: Make the algorithm return something, preferably a dictionary but we cna jsonify anything
+# from flaskApp.models import Employee, Shift, Available_For
 
 # The actual scheduling algorithm
 # __________________________________
 
-# Step 1.1: Query the database for the pertinent availability into a list.
+# Query the database for the pertinent availability into a list.
 
 """
 Luke is going to take care of querying the database. The following code is an example return from database queries -
@@ -69,17 +66,22 @@ def call_algorithm():
     target_shifts = [2, 1, 1]
     return make_schedule(raw_availabilities, slots_to_fill, max_slots, total_shifts, employees, target_shifts)
 
+# ______________________________________________________________________________________________
+# Division between pseudo-testing setup (above) and actual algorithm methods (below)
+# _______________________________________________________________________________________________
 
+
+# Call methods below to process data into the necessary inputs for the scheduling algorithm itself, then calls
+# that algorithm. Returns the final schedule output
+# This is the method the server will call
 def make_schedule(raw_availabilities, slots_to_fill, max_slots, total_shifts, employees, target_shifts):
     employees_dict = create_employees_dict(
         employees, target_shifts, raw_availabilities)
     employees_queue = create_employees_queue(employees_dict)
     return schedule(total_shifts, employees_queue, employees_dict, slots_to_fill)
 
-# Step 1.2: Sort the employees into a priority queue based primarily on target number of shifts
-# and secondarily (if two employees have same target number of shifts) on number of available slots per person.
-
-
+# Create employees dict, effectively mapping each employee to all their relevant information in the format
+# Employee: [target shifts, total shifts they are available for, list of all their availabilities]
 def create_employees_dict(employees, target_shifts, raw_availabilities):
     employees_dict = {}
     avbl_index = 0
@@ -91,7 +93,8 @@ def create_employees_dict(employees, target_shifts, raw_availabilities):
         emp_index += 1
     return employees_dict
 
-
+# Sort the employees into a priority queue based primarily on target number of shifts
+# and secondarily (if two employees have same target number of shifts) on number of available slots per person.
 def create_employees_queue(employees_dict):
     ordered_employees = sorted(
         employees_dict, key=lambda k: (employees_dict[k][0], employees_dict[k][1]))
@@ -100,54 +103,30 @@ def create_employees_queue(employees_dict):
         employees_queue.put(emp)
     return employees_queue
 
-# Step 2: Step through the schedule and try to schedule someone, checking the constraints to see if its possible.
-
-
-print("scheduling algorithm:")
-
-
+# Scheduling algorithm
 def schedule(total_shifts, employees_queue, employees_dict, slots_to_fill):
+    # List of employees (empty, filled below) in the order of shifts in given time period
     schedule_list = [None for x in range(total_shifts)]
 
+    # Iterate through employees queue
     while not employees_queue.empty():
         current_employee = employees_queue.get()
-        print("current_employee:")
-        print(current_employee)
+        # Try to schedule current employee for each shift
         for shift_index in range(total_shifts):
-            print("shift_index:")
-            print(shift_index)
+            # Schedule current employee for current shift if shift is unfilled and employee is available
             if schedule_list[shift_index] == None and employees_dict[current_employee][2][shift_index] == 1:
                 schedule_list[shift_index] = current_employee
-                print("employee scheduled for shift")
+                # Decrement amount of remaining shifts to fill for current employee
                 employees_dict[current_employee][0] -= 1
-                print("employee remaining shifts after scheduling:")
-                print(employees_dict[current_employee][0])
+                # Add employee back into queue if they have any remaining shifts to be scheduled for (target shifts)
                 if employees_dict[current_employee][0] > 0:
                     employees_queue.put(current_employee)
-                    print("employee re-added to queue")
                 break
-            else:
-                shift_index += 1
 
+    # Dictionary mapping shifts to employees that have filled them
     schedule_dict = {}
     for i in range(len(schedule_list)):
         schedule_dict[slots_to_fill[i]] = schedule_list[i]
         i += 1
 
     return schedule_dict
-
-
-# Step 3: Remove the guide from the queue if they can be scheduled
-# Step 4: Keep track of how many times people have been scheduled to enforce fairness
-# Step 5: Update the database with the new schedule information
-# Step 6: ML to make it good
-
-
-def main():
-    print("schedule_dict:")
-    print(make_schedule(raw_availabilities, slots_to_fill,
-                        max_slots, total_shifts, employees, target_shifts))
-
-
-if __name__ == '__main__':
-    main()
