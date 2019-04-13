@@ -5,6 +5,7 @@ Flask-Login==0.4.1
 Flask-LoginManager==1.1.6
 Flask-MySQLdb==0.2.0
 Flask-SQLAlchemy==2.3.2
+Flask-RESTful==0.3.7
 Jinja2==2.10.1
 MarkupSafe==1.1.0
 SQLAlchemy==1.2.15
