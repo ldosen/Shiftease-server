@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, abort, request, make_response, url_for
-from flask_httpauth import HTTPBasicAuth
 from flaskApp import app, db, bcrypt
 # import flaskApp.main_algorithm
 
