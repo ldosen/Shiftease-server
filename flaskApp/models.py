@@ -9,9 +9,9 @@ db.Model.metadata.reflect(db.engine)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return Users.query.get(int(user_id))
 
-class User(db.Model, UserMixin):
+class Users(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
 
 class Employee(db.Model):
     __table_args__ = {'extend_existing': True}
-    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     lname = db.Column(db.String(20), nullable=False)
     fname = db.Column(db.String(20), nullable=False)
 
@@ -31,7 +31,7 @@ class Employee(db.Model):
 
 class Manager(db.Model):
     __table_args__ = {'extend_existing': True}
-    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     lname = db.Column(db.String(20), nullable=False)
     fname = db.Column(db.String(20), nullable=False)
 
@@ -51,13 +51,13 @@ class Shift(db.Model):
 
 class Available_For(db.Model):
     __table_args__ = {'extend_existing': True}
-    employeeId = db.Column(db.Integer, db.ForeignKey('employee.id'), primary_key=True, nullable=False)
-    shiftId = db.Column(db.Integer, db.ForeignKey('shift.id'), primary_key=True, nullable=False)
+    employeeid = db.Column(db.Integer, db.ForeignKey('employee.id'), primary_key=True, nullable=False)
+    shiftid = db.Column(db.Integer, db.ForeignKey('shift.id'), primary_key=True, nullable=False)
 
 
 class Scheduled_For(db.Model):
     __table_args__ = {'extend_existing': True}
-    employeeId = db.Column(db.Integer, db.ForeignKey('employee.id'), primary_key=True, nullable=False)
-    shiftId = db.Column(db.Integer, db.ForeignKey('shift.id'), primary_key=True, nullable=False)
+    employeeid = db.Column(db.Integer, db.ForeignKey('employee.id'), primary_key=True, nullable=False)
+    shiftid = db.Column(db.Integer, db.ForeignKey('shift.id'), primary_key=True, nullable=False)
 
 
