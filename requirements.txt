@@ -1,6 +1,7 @@
 Click==7.0
 Flask==1.0.2
 Flask-Bcrypt==0.7.1
+Flask_Cors==3.0.7
 Flask-Login==0.4.1
 Flask-LoginManager==1.1.6
 Flask-MySQLdb==0.2.0
