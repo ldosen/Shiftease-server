@@ -113,10 +113,13 @@ def create_employees_queue(employees_dict):
 def schedule(total_shifts, employees_queue, employees_dict, slots_to_fill):
     # List of employees (empty, filled below) in the order of shifts in given time period
     schedule_list = [None for x in range(total_shifts)]
+    # List of employees who could not be scheduled by the algorithm
+    unschedulable = {}
 
     # Iterate through employees queue
     while not employees_queue.empty():
         current_employee = employees_queue.get()
+        current_target_shifts = employees_dict[current_employee][0]
         # Try to schedule current employee for each shift
         for shift_index in range(total_shifts):
             # Schedule current employee for current shift if shift is unfilled and employee is available
@@ -128,6 +131,12 @@ def schedule(total_shifts, employees_queue, employees_dict, slots_to_fill):
                 if employees_dict[current_employee][0] > 0:
                     employees_queue.put(current_employee)
                 break
+        # If employee cannot fill any shift after iterating through all shifts, add to
+        # list of unschedulable employees to be manually handled by manager
+        # Output is a dict of each unschedulable employee to a list for which index 0
+        # is their currently remaining shifts and index 1 is their initial # of target shifts
+        if employees_dict[current_employee][0] > 0:
+            unschedulable[current_employee] = [employees_dict[current_employee][0], current_target_shifts]
 
     # Dictionary mapping shifts to employees that have filled them
     schedule_dict = {}
