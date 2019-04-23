@@ -144,4 +144,6 @@ def schedule(total_shifts, employees_queue, employees_dict, slots_to_fill):
         schedule_dict[slots_to_fill[i]] = schedule_list[i]
         i += 1
 
-    return schedule_dict
+    result = {"schedule":schedule_dict, "unschedulable": unschedulable}
+
+    return result
