@@ -78,3 +78,7 @@ class Employee_Schema(ma.ModelSchema):
 class Users_Schema(ma.ModelSchema):
     class Meta:
         model = Users
+
+class Available_For_Schema(ma.Schema):
+    class Meta:
+        fields = ("employee_id", "shift_id")

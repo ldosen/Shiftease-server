@@ -1,7 +1,7 @@
 from flask import request, jsonify, abort, Response
 from flaskApp import app, db, ma, bcrypt
-from flaskApp.models import Users, Employee, Manager, Available_For, Scheduled_For, Shift, Scheduled_For_Schema, Employee_Schema
-# import flaskApp.main_algorithm
+from flaskApp.models import Users, Employee, Manager, Available_For, Scheduled_For, Shift, Scheduled_For_Schema, Employee_Schema, Available_For_Schema
+from flaskApp.main_algorithm import call_algorithm
 
 
 employee_schema = Employee_Schema(many=True)
@@ -14,11 +14,7 @@ def index():
 @app.route("/integrationdemo", methods=['GET'])
 def integration_demo():
 
-    demo_data = {10: {"9am": "Ramsha", "10am": "Somto", "11am":"Maha"},
-                 16: {"8am": "Maha", "10am": "Luke"},
-                 27: {"12pm": "Jonathan"}}
-
-    return jsonify(demo_data)
+    return jsonify(call_algorithm())
 
 
 @app.route("/register", methods=['POST'])
@@ -60,6 +56,14 @@ def get_all_scheduled_shifts():
     schedule_for_schema = Scheduled_For_Schema(many=True)
     results = Scheduled_For.query.all()
     return schedule_for_schema.jsonify(results)
+
+
+@app.route("/available_for/<employee_id>", methods=['GET'])
+def get_employee_availability(employee_id):
+    available_for_schema = Available_For_Schema(many=True)
+    results = Available_For.query.filter(Available_For.employee_id==employee_id)
+    curr_user_availability = available_for_schema.dump(results)
+    return jsonify(curr_user_availability.data)
 
 
 @app.route("/employee", methods=['POST'])
