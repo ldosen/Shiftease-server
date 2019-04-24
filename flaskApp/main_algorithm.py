@@ -35,8 +35,11 @@ slots_to_be_filled_sunday = Shift.query.filter_by(day='sunday').filter_by(filled
 # As such we have 12 data points, 4 per person ie 2 per person per day (I recognize there are really no Sunday tours)
 raw_availabilities = [0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0]
 
-slots_to_fill = ["Saturday: 10:15am - 11:30am", "Saturday: 11:45am - 1pm",
-                 "Sunday: 10:15am - 11:30am", "Sunday: 11:45am - 1pm"]
+#slots_to_fill = ["Saturday: 10:15am - 11:30am", "Saturday: 11:45am - 1pm",
+ #                "Sunday: 10:15am - 11:30am", "Sunday: 11:45am - 1pm"]
+
+# version 2
+slots_to_fill = {2019: {4:{23:{"9am": None,"10am": None}, 24:{"9am": None,"10am": None}}}}
 
 # Greatest amount of timeslots to be filled in any given day in the selected time period.
 # TO-DO: Count this while querying database.
@@ -58,8 +61,7 @@ target_shifts = [2, 1, 1]
 
 def call_algorithm():
     raw_availabilities = [0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0]
-    slots_to_fill = ["Saturday: 10:15am - 11:30am", "Saturday: 11:45am - 1pm",
-                     "Sunday: 10:15am - 11:30am", "Sunday: 11:45am - 1pm"]
+    slots_to_fill = {2019: {4:{23:{"9am": None,"10am": None}, 24:{"9am": None,"10am": None}}}}
     max_slots = 2
     total_shifts = 4
     employees = ["Luke", "George", "Zac"]
@@ -139,11 +141,19 @@ def schedule(total_shifts, employees_queue, employees_dict, slots_to_fill):
             unschedulable[current_employee] = [employees_dict[current_employee][0], current_target_shifts]
 
     # Dictionary mapping shifts to employees that have filled them
-    schedule_dict = {}
-    for i in range(len(schedule_list)):
+    # schedule_dict = {}
+    """for i in range(len(schedule_list)):
+        schedule_dict[slots_to_fill[0]] = slots_to_fill[1]
         schedule_dict[slots_to_fill[i]] = schedule_list[i]
-        i += 1
+        i += 1"""
+    i = 0
+    for year in slots_to_fill:
+        for month in slots_to_fill[year]:
+            for day in slots_to_fill[year][month]:
+                for shift in slots_to_fill[year][month][day]:
+                    slots_to_fill[year][month][day][shift] = schedule_list[i]
+                    i+=1
 
-    result = {"schedule":schedule_dict, "unschedulable": unschedulable}
+    result = {"schedule":slots_to_fill, "unschedulable": unschedulable}
 
     return result
