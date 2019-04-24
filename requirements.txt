@@ -6,6 +6,7 @@ Flask-Login==0.4.1
 Flask-LoginManager==1.1.6
 Flask-MySQLdb==0.2.0
 Flask-SQLAlchemy==2.3.2
+Flask-RESTful==0.3.7
 Jinja2==2.10.1
 MarkupSafe==1.1.0
 SQLAlchemy==1.2.15
@@ -21,4 +22,6 @@ pycparser==2.19
 pytz==2019.1
 setuptools==40.8.0
 six==1.12.0
-
+marshmallow==2.19.2
+marshmallow-sqlalchemy==0.16.2
+flask-marshmallow==0.10.0
