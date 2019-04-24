@@ -66,6 +66,19 @@ def get_employee_availability(employee_id):
     return jsonify(curr_user_availability.data)
 
 
+@app.route("/create_scheduled_for", methods=['POST'])
+def create_scheduled_for():
+    request_data = request.get_json(force=True)
+    employee_id = request_data.json['employee_id']
+    shift_id = request_data.json['shift_id']
+
+    scheduled_for = Scheduled_For(employee_id=employee_id, shift_id=shift_id)
+    db.session.add(scheduled_for)
+    db.session.commit()
+    return Response(status=200)
+
+
+
 @app.route("/employee", methods=['POST'])
 def create_new_employee():
     return None
