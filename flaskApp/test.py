@@ -18,6 +18,8 @@ class TestMainAlgorithm(unittest.TestCase):
     def test_not_none(self):
         self.assertNotEqual(self.result, None)
 
+
+"""
     def test_db_queries(self):
         # check db query equal to expected
 
@@ -33,7 +35,7 @@ class TestMainAlgorithm(unittest.TestCase):
     def test_db_update(self):
         # check if the db updates to reflect the output of the algorithm
         # basically test_scheduled combined with test_db_queries
-
+"""
 
 if __name__ == '__main__':
     unittest.main()
