@@ -12,13 +12,7 @@ def index():
     return "<h1> hello, world </h1>"
 
 
-@app.route("/integrationdemo", methods=['GET'])
-def integration_demo():
-
-    return jsonify(call_algorithm())
-
-
-@app.route("/register", methods=['GET', 'POST'])
+@app.route("/register", methods=['POST'])
 def register():
     # get the request as JSON, get the required fields, then create a new user with those fields
     request_data = request.get_json(force=True)
@@ -28,7 +22,7 @@ def register():
         password = request_data['password']
         user_type = request_data['user_type']
 
-        user = Users(username=username, email=email, password=password, usertype=user_type)
+        user = Users(username=username, email=email, password=password, user_type=user_type)
 
         db.session.add(user)
         db.session.commit()
@@ -70,8 +64,8 @@ def get_employee_availability(employee_id):
 @app.route("/create_scheduled_for", methods=['POST'])
 def create_scheduled_for():
     request_data = request.get_json(force=True)
-    employee_id = request_data.json['employee_id']
-    shift_id = request_data.json['shift_id']
+    employee_id = request_data['employee_id']
+    shift_id = request_data['shift_id']
 
     scheduled_for = Scheduled_For(employee_id=employee_id, shift_id=shift_id)
     db.session.add(scheduled_for)
@@ -79,16 +73,36 @@ def create_scheduled_for():
     return Response(status=200)
 
 
-@app.route("/delete_scheduled_for", methods=['DELETE'])
-def delete_scheduled_for():
-    return None
+@app.route("/scheduled_for/<employee_id>/<shift_id>/delete", methods=['POST'])
+def delete_scheduled_for(employee_id, shift_id):
+    scheduled_for = Scheduled_For.query.filter_by(employee_id=employee_id).filter_by(shift_id=shift_id)
+    db.session.delete(scheduled_for)
+    db.session.commit()
+    return Response(status=200)
 
 
-@app.route("/employee", methods=['POST'])
-def create_new_employee():
-    return None
+@app.route("/user/<id>/update_email", methods=['POST'])
+def update_user_email(id):
+
+    curr_user = Users.query.get(id)
+    curr_email = curr_user.email
+    request_data = request.get_json(force=True)
+    new_email = request_data['email']
+
+    if curr_email != new_email:
+        curr_user.email = new_email
+        db.session.commit()
+        return Response(status=200)
+
+    else:
+        return Response(status=400)
 
 
-@app.route("/scheduled_for", methods=['POST'])
-def schedule_new_guide():
-    return None
+@app.route("/shift/count", methods=['GET'])
+def get_count_filled_shifts():
+    count = Shift.query.filter_by(filled=False).count()
+    return jsonify(count)
+
+@app.route("/available_for/<timeslot>", methods=['GET'])
+def get_free_guide_names_by_timeslot(timeslot):
+    results = Employee.query.join(Available_For, Employee.id == Available_For.employee_id).join(Shift, Available_For.shift_id == Shift.id).filter_by()

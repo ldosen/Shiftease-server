@@ -1,12 +1,7 @@
-from datetime import datetime
 from flaskApp import db, ma, login_manager
 from flask_login import UserMixin
-from functools import partial
-from sqlalchemy import orm
 
 db.Model.metadata.reflect(db.engine)
-
-# TODO Define model schemas using Marshmallow for easier object serialization
 
 
 @login_manager.user_loader
