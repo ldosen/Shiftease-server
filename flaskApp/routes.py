@@ -6,6 +6,7 @@ from flaskApp.main_algorithm import call_algorithm
 
 employee_schema = Employee_Schema(many=True)
 
+
 @app.route("/")
 def index():
     return "<h1> hello, world </h1>"
@@ -22,10 +23,10 @@ def register():
     # get the request as JSON, get the required fields, then create a new user with those fields
     request_data = request.get_json(force=True)
     if request_data is not None:
-        username = request_data.json['username']
-        email = request_data.json['email']
-        password = request_data.json['password']
-        user_type = request_data.json['user_type']
+        username = request_data['username']
+        email = request_data['email']
+        password = request_data['password']
+        user_type = request_data['user_type']
 
         user = Users(username=username, email=email, password=password, usertype=user_type)
 
@@ -77,6 +78,10 @@ def create_scheduled_for():
     db.session.commit()
     return Response(status=200)
 
+
+@app.route("/delete_scheduled_for", methods=['DELETE'])
+def delete_scheduled_for():
+    return None
 
 
 @app.route("/employee", methods=['POST'])
