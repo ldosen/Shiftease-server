@@ -103,6 +103,10 @@ def get_count_filled_shifts():
     count = Shift.query.filter_by(filled=False).count()
     return jsonify(count)
 
-@app.route("/available_for/<timeslot>", methods=['GET'])
-def get_free_guide_names_by_timeslot(timeslot):
-    results = Employee.query.join(Available_For, Employee.id == Available_For.employee_id).join(Shift, Available_For.shift_id == Shift.id).filter_by()
+
+@app.route("/available_for/<timeslot>/<day>", methods=['GET'])
+def get_free_guide_names_by_timeslot(timeslot, day):
+    employee_schema = Employee_Schema(many=True)
+    results = Employee.query.join(Available_For, Employee.id == Available_For.employee_id).join(Shift, Available_For.shift_id == Shift.id).filter(Shift.day==day).filter(Shift.time==timeslot)
+    employees_for_timeslot = employee_schema.dump(results)
+    return jsonify(employees_for_timeslot.data)
