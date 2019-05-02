@@ -18,7 +18,7 @@ def integration_demo():
     return jsonify(call_algorithm())
 
 
-@app.route("/register", methods=['POST'])
+@app.route("/register", methods=['GET', 'POST'])
 def register():
     # get the request as JSON, get the required fields, then create a new user with those fields
     request_data = request.get_json(force=True)
